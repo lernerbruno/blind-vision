@@ -47,74 +47,12 @@ void setup() {
   tts = new TTS();
 }
 
-ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) {
-   detected_faces = new ArrayList<Face>();
-
-  for (int i = 0; i < faces.length; i++) {
-    int middlePoint_x = faces[i].x + faces[i].width/2;  
-    int middlePoint_y = faces[i].y + faces[i].height/2;  
-    int offset = middlePoint_x + middlePoint_y * kinect.width;
-    int d = depth[offset];
-    int position = middlePoint_x - kinect.width/2;
-
-    ellipse(middlePoint_x, middlePoint_y, 10, 10);
-    rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
-    Face detected_face = new Face(d, position);
-    detected_faces.add(detected_face);
- 
-    String s = "Distance: " + d;
-    textSize(10);
-    text(s, 10, 10, 70, 80);
-    fill(255, 255, 255);
-  }
-
-  return detected_faces;
-}
 //void detect_traffic_light(PImage img) {
 //  detect_color()
   
 //}
 
-void beep_distance(int[] depth) {
-  int close_record = 4500;
-  int rX = 0;
-  int rY = 0;
-  
-  int maxThreshold = 1000;
-  int minThreshold = 350;
-  
-  for ( int x = 0; x < kinect.width; x++ ) {
-    for ( int y = 0; y < kinect.height; y++ ) {
-      int offset = x + y*kinect.width;
-      int d = depth[offset];
-      
-      if ( d < close_record ) {
-         close_record = d; 
-         rX = x;
-         rY = y;
-      }
-        
-      if (close_record < maxThreshold) {
-        // If value of trigger is equal to the computer clock and if not all 
-        // notes have been played yet, the next note gets triggered.
-        if ((millis() > trigger) ) {
-          float amplitude = map(d, maxThreshold, minThreshold, 0, 1);
-          duration = map(d, minThreshold, maxThreshold, 100, 200);
-         
-          triOsc.play(midiToFreq(distance_note), amplitude);
-          env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-      
-          trigger = millis() + duration;
-        }   
-      }
-    }
-  }
-  
-  fill(255, 0, 0);
-  strokeWeight(4.0);
-  stroke(0);
-  ellipse(rX, rY, 16, 16);
-}
+
 
 void detect_color(PImage img, color track_color) {
   float avgX = 0;
@@ -166,24 +104,12 @@ void draw() {
   image(img, 0, 0);
 
   detected_faces = deal_with_faces(faces, depth);
-  print(detected_faces);
-  print("\n\n\n");
   detect_color(img, track_color);
   beep_distance(depth);
   Data data = new Data(detected_faces);
-  print(data.faces);
-  print("\n\n");
-  text_to_speech(data);
+  //text_to_speech(data);
   
   
-  
-  
-  //PVector loc = opencv.max();
-  
-  //stroke(255, 0, 0);
-  //strokeWeight(4);
-  //noFill();
-  //ellipse(loc.x, loc.y, 10, 10);
   
   line(kinect.width/2, kinect.height, kinect.width/2, 0);
 }
