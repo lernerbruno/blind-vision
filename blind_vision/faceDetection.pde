@@ -1,4 +1,4 @@
-ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) { //<>//
+ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth, ArrayList<Face> old_faces) { //<>//
    detected_faces = new ArrayList<Face>();
 
   for (int i = 0; i < faces.length; i++) {
@@ -20,4 +20,14 @@ ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) { //<>//
   }
 
   return detected_faces;
+}
+
+boolean isInsideOneFace(ArrayList<Face> oldFaces, Face face)
+{
+  if (oldFaces == null) return true;
+  for (int i = 0; i < oldFaces.size(); i++)
+  {
+    if (!oldFaces.get(i).isInside(face.center_x(), face.center_y())) return false;
+  }
+  return true;
 }
