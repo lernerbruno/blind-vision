@@ -1,119 +1,188 @@
-//import org.openkinect.freenect.*;
-//import org.openkinect.freenect2.*;
-//import org.openkinect.processing.*;
-//import org.openkinect.tests.*;
-//import processing.sound.*;
+import gab.opencv.*;
+import java.awt.Rectangle;
+import org.openkinect.freenect.*;
+import org.openkinect.freenect2.*;
+import org.openkinect.processing.*;
+import org.openkinect.tests.*;
+import processing.sound.*;
 
-//// Oscillator and envelope 
-//TriOsc triOsc;
-//Env env; 
+// Oscillator and envelope 
+TriOsc triOsc;
+Env env; 
+float attackTime = 0.001;
+float sustainTime = 0.004;
+float sustainLevel = 0.2;
+float releaseTime = 0.2;
+float duration = 200;
+int distance_note = 60;
+float trigger = 0; 
 
-//// Times and levels for the ASR envelope
-//float attackTime = 0.001;
-//float sustainTime = 0.004;
-//float sustainLevel = 0.2;
-//float releaseTime = 0.2;
+OpenCV opencv;
+Rectangle[] faces;
+Kinect kinect;
+PImage img;
+ArrayList<Face> detected_faces;
+int threshold = 25;
+color track_color = color(0, 0, 0);
 
-//// Set the duration between the notes
-//float duration = 200;
-//int[] midiSequence = { 
-//  60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72
-//}; 
-//int note_repeat = 60;
+void settings() {
+  size(640, 480);
+}
 
-//// Set the note trigger
-//float trigger = 0; 
-
-//// An index to count up the notes
-//int note = 0; 
-
-//Kinect kinect;
-//PImage img;
-
-//float minThreshold = 420;
-//float maxThreshold = 750;
-
-//void settings() {
-//  size(640, 480);
-//}
-
-//void setup() {
-//  //kinect initialization
-//  kinect = new Kinect(this); 
-//  kinect.initDepth();
-//  kinect.initVideo();
-//  img = createImage(kinect.width, kinect.height, RGB);
+void setup() {  
+  //kinect initialization
+  kinect = new Kinect(this); 
+  kinect.initDepth();
+  kinect.initVideo();
+  img = createImage(kinect.width, kinect.height, RGB);
     
-//  // Create triangle wave and envelope 
-//  triOsc = new TriOsc(this);
-//  env  = new Env(this);
+  // Create triangle wave and envelope 
+  triOsc = new TriOsc(this);
+  env  = new Env(this);
+}
+
+ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) {
+   detected_faces = new ArrayList<Face>();
+
+  for (int i = 0; i < faces.length; i++) {
+    int middlePoint_x = faces[i].x + faces[i].width/2;  
+    int middlePoint_y = faces[i].y + faces[i].height/2;  
+    int offset = middlePoint_x + middlePoint_y * kinect.width;
+    int d = depth[offset];
+    int position = middlePoint_x - kinect.width/2;
+
+    ellipse(middlePoint_x, middlePoint_y, 10, 10);
+    rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+    Face detected_face = new Face(d, position);
+    detected_faces.add(detected_face);
+ 
+    String s = "Distance: " + d;
+    textSize(10);
+    text(s, 10, 10, 70, 80);
+    fill(255, 255, 255);
+  }
+
+  return detected_faces;
+}
+//void detect_traffic_light(PImage img) {
+//  detect_color()
+  
 //}
 
-//void draw() {
-//  background(0); 
-//  img.loadPixels();
+void beep_distance(int[] depth) {
+  int close_record = 4500;
+  int rX = 0;
+  int rY = 0;
   
-//  int[] depth = kinect.getRawDepth();
-//  PImage color_image = kinect.getVideoImage();
-//  int closeRecord = 4500;
-//  int rX = 0;
-//  int rY = 0;
+  int maxThreshold = 1000;
+  int minThreshold = 350;
   
-//  for ( int x = 0; x < kinect.width; x++ ) {
-//    for ( int y = 0; y < kinect.height; y++ ) {
-//      int offset = x + y*kinect.width;
-//      int d = depth[offset];
+  for ( int x = 0; x < kinect.width; x++ ) {
+    for ( int y = 0; y < kinect.height; y++ ) {
+      int offset = x + y*kinect.width;
+      int d = depth[offset];
       
-//      if(d > minThreshold && d < maxThreshold && x> 50 && y > 50) {
-//        float green = map(d, minThreshold, maxThreshold, 0, 255); 
-//        img.pixels[offset] = color(40,255 - green,200);
+      if ( d < close_record ) {
+         close_record = d; 
+         rX = x;
+         rY = y;
+      }
         
-//        if ( d < closeRecord ) {
-//         closeRecord = d; 
-//         rX = x;
-//         rY = y;
-//        }
-//         // If value of trigger is equal to the computer clock and if not all 
-//        // notes have been played yet, the next note gets triggered.
-//        if ((millis() > trigger) ) {
-//          float amplitude = map(d, minThreshold, maxThreshold, 0, 1);
-//          duration = map(d, minThreshold, maxThreshold, 50, 200);
-//          //float sustainTime = map(d, minThreshold, maxThreshold, 0.004, 0.01);
-          
-//          // midiToFreq transforms the MIDI value into a frequency in Hz which we use 
-//          //to control the triangle oscillator with an amplitute of 0.8
-//          triOsc.play(midiToFreq(note_repeat), amplitude);
+      if (close_record < maxThreshold) {
+        // If value of trigger is equal to the computer clock and if not all 
+        // notes have been played yet, the next note gets triggered.
+        if ((millis() > trigger) ) {
+          float amplitude = map(d, maxThreshold, minThreshold, 0, 1);
+          duration = map(d, minThreshold, maxThreshold, 100, 200);
+         
+          triOsc.play(midiToFreq(distance_note), amplitude);
+          env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
       
-//          // The envelope gets triggered with the oscillator as input and the times and 
-//          // levels we defined earlier
-//          env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-      
-//          // Create the new trigger according to predefined durations and speed
-//          trigger = millis() + duration;
-//        }
-        
-//      } else {
-//        img.pixels[offset] = color(0,0,0);
-//      }
-//    }
-//  }
+          trigger = millis() + duration;
+        }   
+      }
+    }
+  }
   
-//  img.updatePixels();
-//  image(img, 0, 0);
-//  image(color_image, 0, 0);
-  
-//  fill(150, 0, 255);
-//  //ellipse(avgX, avgY, 64, 64);
-//  fill(255);
-//  ellipse(rX, rY, 32, 32);
-  
-  
-//  //fill(255);
-//  //textSize(32);
-//  //text(minThreshold + " " + maxThreshold, 10, 64);
-//}
+  fill(255, 0, 0);
+  strokeWeight(4.0);
+  stroke(0);
+  ellipse(rX, rY, 16, 16);
+}
 
-//// This function calculates the respective frequency of a MIDI note
-//float midiToFreq(int note) {
-//  return (pow(2, ((note-69)/12.0)))*440;
-//}
+void detect_color(PImage img, color track_color) {
+  float avgX = 0;
+  float avgY = 0;
+  int count = 0;
+  
+  for (int x = 0; x < img.width; x++ ) {
+     for (int y = 0; y < img.height; y++) {
+       int loc = x + y * img.width;
+       color current_color = img.pixels[loc];
+       float r1 = red(current_color);
+       float g1 = green(current_color);
+       float b1 = blue(current_color);
+       float r2 = red(track_color);
+       float g2 = green(track_color);
+       float b2 = blue(track_color);
+       
+       float color_distance = dist(r1, g1, b1, r2, g2, b2);
+       
+       if (color_distance < threshold) {
+        avgX += x;
+        avgY += y;
+        count ++;
+       }
+     }
+  }
+  
+  if (count > 0) {
+     avgX = avgX / count;
+     avgY  = avgY / count;
+     fill(0, 0, 0);
+     strokeWeight(4.0);
+     stroke(0);
+     ellipse(avgX, avgY, 16, 16);
+  }
+}
+
+void draw() {
+  noFill();
+  stroke(0, 255, 0);
+  strokeWeight(3);
+  
+  PImage img = kinect.getVideoImage();
+  int[] depth = kinect.getRawDepth();
+  opencv = new OpenCV(this, img);   
+  opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);  
+  
+  faces = opencv.detect();
+  image(img, 0, 0);
+
+  detected_faces = deal_with_faces(faces, depth);
+  print(detected_faces);
+  print("\n\n\n");
+  detect_color(img, track_color);
+  beep_distance(depth);
+  Data data = new Data(detected_faces);
+  print(data.faces);
+  print("\n\n");
+  text_to_speech(data);
+  
+  
+  
+  
+  //PVector loc = opencv.max();
+  
+  //stroke(255, 0, 0);
+  //strokeWeight(4);
+  //noFill();
+  //ellipse(loc.x, loc.y, 10, 10);
+  
+  line(kinect.width/2, kinect.height, kinect.width/2, 0);
+}
+
+// This function calculates the respective frequency of a MIDI note
+float midiToFreq(int note) {
+  return (pow(2, ((note-69)/12.0)))*440;
+}
