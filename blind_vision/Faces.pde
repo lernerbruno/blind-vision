@@ -49,8 +49,11 @@ class Faces
         add = false;
       }
     }
-    if (add) newFacesArr.add(face);
-    stroke(0, 255, 0);
+    if (add) 
+    {
+      newFacesArr.add(face);
+      stroke(0, 255, 0);
+    }
     ellipse(face.center_x(), face.center_y(), 10, 10);
     rect(face.x, face.y, face.w, face.h);
 }
