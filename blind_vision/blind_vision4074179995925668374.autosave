@@ -1,4 +1,4 @@
-import gab.opencv.*;
+gimport gab.opencv.*;
 import java.awt.Rectangle;
 import org.openkinect.freenect.*;
 import org.openkinect.freenect2.*;
@@ -61,9 +61,14 @@ void draw() {
 
   detected_faces = deal_with_faces(faces, depth);
   detect_color(img, track_color);
-  beep_distance(depth);
+  //beep_distance(depth);
   Data data = new Data(detected_faces);
   text_to_speech(data);
   
   line(kinect.width/2, kinect.height, kinect.width/2, 0);
+}
+
+// This function calculates the respective frequency of a MIDI note
+float midiToFreq(int note) {
+  return (pow(2, ((note-69)/12.0)))*440;
 }

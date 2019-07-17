@@ -31,5 +31,4 @@ void text_to_speech(Data data) {
      }
      audio_counter ++;
    }
-    //<>// //<>//
-}
+} //<>// //<>//
