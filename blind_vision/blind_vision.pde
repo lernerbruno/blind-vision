@@ -46,11 +46,6 @@ void setup() {
   tts = new TTS();
 }
 
-//void detect_traffic_light(PImage img) {
-//  detect_color()
-  
-//}
-
 void draw() {
   noFill();
   stroke(0, 255, 0);
@@ -68,7 +63,7 @@ void draw() {
   detect_color(img, track_color);
   //beep_distance(depth);
   Data data = new Data(detected_faces);
-  //text_to_speech(data);
+  text_to_speech(data);
   
   line(kinect.width/2, kinect.height, kinect.width/2, 0);
 }
