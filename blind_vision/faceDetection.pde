@@ -37,5 +37,14 @@ void draw() {
   strokeWeight(3);
   for (int i = 0; i < faces.length; i++) {
     rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+    int middlePoint_x = faces[i].x + faces[i].width/2;  
+    int middlePoint_y = faces[i].y + faces[i].height/2;  
+    int offset = middlePoint_x + middlePoint_y*kinect.width;
+    ellipse(middlePoint_x, middlePoint_y, 10, 10);
+    int d = depth[offset];
+    print(d);
+    String s = "The distance to the face is: " + d;
+    stroke(20);
+    text(s, 10, 10, 70, 80); 
   }
 }
