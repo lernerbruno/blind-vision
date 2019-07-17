@@ -5,6 +5,9 @@ import org.openkinect.freenect2.*;
 import org.openkinect.processing.*;
 import org.openkinect.tests.*;
 import processing.sound.*;
+import guru.ttslib.*;
+ 
+TTS tts;
 
 // Oscillator and envelope 
 TriOsc triOsc;
@@ -39,6 +42,8 @@ void setup() {
   // Create triangle wave and envelope 
   triOsc = new TriOsc(this);
   env  = new Env(this);
+  
+  tts = new TTS();
 }
 
 ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) {
