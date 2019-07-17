@@ -45,9 +45,13 @@ class Faces
       if (!oldFaces.newFacesArr.get(i).isInside(face.center_x(), face.center_y())) 
       {
         if (add) oldFacesArr.add(face);
+        stroke(255, 0, 0);
         add = false;
       }
     }
     if (add) newFacesArr.add(face);
+    stroke(0, 255, 0);
+    ellipse(face.center_x(), face.center_y(), 10, 10);
+    rect(face.x, face.y, face.w, face.h);
 }
 }
