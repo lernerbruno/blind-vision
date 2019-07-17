@@ -24,7 +24,7 @@ OpenCV opencv;
 Rectangle[] faces;
 Kinect kinect;
 PImage img;
-ArrayList<Face> detected_faces;
+Faces detected_faces;
 int threshold = 25;
 color track_color = color(0, 0, 0);
 
@@ -102,10 +102,10 @@ void draw() {
   faces = opencv.detect();
   image(img, 0, 0);
 
-  detected_faces = deal_with_faces(faces, depth, detected_faces);
+  detected_faces = new Faces(faces, depth, detected_faces);
   detect_color(img, track_color);
   beep_distance(depth);
-  Data data = new Data(detected_faces);
+  Data data = new Data(detected_faces.newFacesArr);
   //text_to_speech(data);
   
   
