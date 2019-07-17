@@ -37,6 +37,7 @@ class Faces
       if (!oldFaces.oldFacesArr.get(i).isInside(face.center_x(), face.center_y())) 
       {
         if (add) oldFacesArr.add(face);
+        stroke(255, 0, 0);
         add = false;
       }
     }
