@@ -16,8 +16,9 @@ void text_to_speech(Data data) {
       }
      
      textSize(10);
+     
      tts.speak(message);
-     text(message, 100, 100, 270, 280);
+     text(message, 100, 100, 270, 280); //<>//
      fill(255, 255, 255);
    }
     //<>// //<>//

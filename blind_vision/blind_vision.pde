@@ -19,6 +19,7 @@ float releaseTime = 0.2;
 float duration = 200;
 int distance_note = 60;
 float trigger = 0; 
+String previous_message = "";
 
 OpenCV opencv;
 Rectangle[] faces;
