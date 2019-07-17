@@ -6,7 +6,7 @@ class Face {
    int size_x;
    int size_y;
    
-   Face(int dist, int pos) {
+   Face(int dist, int pos, int x, int y , int size_x, int size_y) {
        distance = dist;
        position = pos;
    }

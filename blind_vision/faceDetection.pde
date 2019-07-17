@@ -1,4 +1,4 @@
-ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) {
+ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) { //<>//
    detected_faces = new ArrayList<Face>();
 
   for (int i = 0; i < faces.length; i++) {
@@ -10,7 +10,7 @@ ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) {
 
     ellipse(middlePoint_x, middlePoint_y, 10, 10);
     rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
-    Face detected_face = new Face(d, position);
+    Face detected_face = new Face(d, position, faces[i].x, faces[i].y, faces[i].width, faces[i].height);
     detected_faces.add(detected_face);
  
     String s = "Distance: " + d;
