@@ -19,6 +19,9 @@ void text_to_speech(Data data) {
         }
       }
       
+     if (closest == 2000) {
+      return; 
+     }
      String person = faces.size() > 1 ?  "The closest one" : "It";
      message += person + " is " + str(closest/10) + " centimeters from you, to your " + closest_position;
      
@@ -28,7 +31,7 @@ void text_to_speech(Data data) {
      
      if (audio_counter % FREQUENCY == 2) {
        tts.speak(message);
-     }
+     } //<>// //<>//
      audio_counter ++;
    }
-} //<>// //<>//
+}
