@@ -45,7 +45,7 @@ void setup() {
   tts = new TTS();
   
   // Starts a myServer on port 5204
-  myServer = new Server(this, 5204); 
+  myServer = new Server(this, 5204);
 }
 
 void draw() {

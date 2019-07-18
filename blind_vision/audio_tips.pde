@@ -46,9 +46,6 @@ void text_to_speech(Data data) {
      audio_counter ++;
    }
    
-   
-   Tuple final_destination_coordinates = new Tuple(data.final_destination.x, data.final_destination.y);
-   float final_destination_pos = data.final_destination.final_destination_pos;
    int final_destination_d = data.final_destination.distance;
    
     if (destination_counter % DESTINATION_FREQUENCY == 2) {
@@ -58,23 +55,28 @@ void text_to_speech(Data data) {
      }
      destination_counter ++;
      
-     if (server_count % SERVER_FREQUENCY == 5) {
-         ServerData server_data = new ServerData(faces_position, final_destination_coordinates);
-         String server_message = "[";
+     
          int faces_pos_size = faces_position.size();
-         int i = 0;
-         for (Tuple t : faces_position) {
-             server_message += "(" + t.x + "," + t.y + ")";
-             if (i == faces_pos_size - 1) {
-               server_message += "]";
-             } else {
-               server_message += ",";
-             }
-             i++;
+         String server_message = "";
+         if (faces_pos_size != 0){
+           server_message = "[";
+           
+           int i = 0;
+           for (Tuple t : faces_position) {
+               server_message += "(" + t.x + "," + t.y + ")";
+               if (i == faces_pos_size - 1) {
+                 server_message += "]";
+               } else {
+                 server_message += ",";
+               }
+               i++;
+           }  
          }
+         
          print(server_message);
+         print("\n\n\n\n\n");
          myServer.write(server_message);
-     }
+     
      server_count ++;
 }
 
