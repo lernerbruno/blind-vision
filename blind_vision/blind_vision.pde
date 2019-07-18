@@ -36,16 +36,13 @@ void setup() {
   kinect.initDepth();
   kinect.initVideo();
   img = createImage(kinect.width, kinect.height, RGB);
-    
+
   // Create triangle wave and envelope 
   triOsc = new TriOsc(this);
   env  = new Env(this);
   
   // Text to speech
   tts = new TTS();
-  
-  // Starts a myServer on port 5204
-  myServer = new Server(this, 5204);
 }
 
 void draw() {
