@@ -10,7 +10,7 @@ ArrayList<Face> deal_with_faces(Rectangle[] faces, int[] depth) {
 
     ellipse(middlePoint_x, middlePoint_y, 10, 10);
     rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
-    Face detected_face = new Face(d, position);
+    Face detected_face = new Face(d, position, middlePoint_x, middlePoint_y);
     detected_faces.add(detected_face);
  
     String s = "Distance: " + d;
