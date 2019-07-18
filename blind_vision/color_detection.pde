@@ -1,4 +1,4 @@
-void detect_color(PImage img, color track_color) {
+Final detect_color(PImage img, color track_color, int[] depth) {
   float avgX = 0;
   float avgY = 0;
   int count = 0;
@@ -32,4 +32,10 @@ void detect_color(PImage img, color track_color) {
      stroke(0);
      ellipse(avgX, avgY, 16, 16);
   }
+  
+  int offset = int(avgX + avgY * kinect.width);
+  int d = depth[offset];
+     
+  Final final_dest = new Final(avgX - img.width/2, d);
+  return final_dest;
 }

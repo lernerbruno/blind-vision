@@ -60,9 +60,11 @@ void draw() {
   image(img, 0, 0);
 
   detected_faces = deal_with_faces(faces, depth);
-  detect_color(img, track_color);
   beep_distance(depth);
-  Data data = new Data(detected_faces);
+  Final final_destination = detect_color(img, track_color, depth);
+  
+  
+  Data data = new Data(detected_faces, final_destination);
   text_to_speech(data);
   
   line(kinect.width/2, kinect.height, kinect.width/2, 0);

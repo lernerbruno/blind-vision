@@ -1,11 +1,14 @@
 int audio_counter = 0;
 int FREQUENCY = 20;
+String message = "";
+int destination_counter = 0;
+int DESTINATION_FREQUENCY = 30;
+
 void text_to_speech(Data data) {
-   String message = "";
-   
+   message = "";
    ArrayList<Face> faces = data.faces;
    if (faces != null && faces.size() != 0) {
-     message = faces.size() > 1 ? "There are " + faces.size() + " people. " : "There is 1 person. ";  
+     message = faces.size() > 1 ? "Watch out! There are " + faces.size() + " people. " : "Watch out! There is 1 person. ";  
      
      int closest = 2000;
      String closest_position = "";
@@ -28,10 +31,26 @@ void text_to_speech(Data data) {
      textSize(20);
      fill(255, 255, 255);
      text(message, 100, 100, 270, 280);
-     
+      //<>// //<>//
      if (audio_counter % FREQUENCY == 2) {
-       tts.speak(message);
-     } //<>// //<>//
+       thread("speak");
+     }
      audio_counter ++;
    }
+   
+   
+ 
+   float final_destination_pos = data.final_destination.final_destination_pos;
+   int final_destination_d = data.final_destination.distance;
+   
+    if (destination_counter % DESTINATION_FREQUENCY == 2) {
+       message = "The destination is " + str(final_destination_d/10) + " centimeters from you. ";
+          
+       thread("speak");
+     }
+     destination_counter ++;
+}
+
+void speak() {
+   tts.speak(message);
 }
