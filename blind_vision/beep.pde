@@ -52,7 +52,7 @@ void beep_distance(int[] depth) {
         duration = 2000;  
       }
      
-      triOsc.play(midiToFreq(distance_note), .8);
+      triOsc.play(midiToFreq(distance_note), 1.0);
       env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
   
       trigger = millis() + duration;

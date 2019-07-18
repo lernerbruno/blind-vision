@@ -2,19 +2,28 @@ import http.requests.*;
 
 int val = 0;
 int audio_counter = 0;
-int FREQUENCY = 40;
+int FREQUENCY = 30;
 String message = "";
 int destination_counter = 0;
-int DESTINATION_FREQUENCY = 50;
+int DESTINATION_FREQUENCY = 30;
 int server_count = 0;
 int SERVER_FREQUENCY = 10;
+int overall_counter = 0;
+
+String messageDistance(int d)
+{
+  if (d == 2047 && overall_counter > 5) return "very close";
+  else if (d < 1000) return "close";
+  else if (d < 1500) return "far";
+  else return "very far";
+}
 
 void text_to_speech(Data data) {
    message = "";
    ArrayList<Face> faces = data.faces;
    ArrayList<Tuple> faces_position = new ArrayList<Tuple>();
    if (faces != null && faces.size() != 0) {
-     message = faces.size() > 1 ? "Watch out! There are " + faces.size() + " people. " : "Watch out! There is 1 person. ";  
+     message = faces.size() > 1 ? "There are " + faces.size() + " people. " : "There is 1 person. ";  
      
      int closest = 2000;
      String closest_position = "";
@@ -33,7 +42,7 @@ void text_to_speech(Data data) {
       return;  //<>// //<>//
      }
      String person = faces.size() > 1 ?  "The closest one" : "It";
-     message += person + " is " + str(closest/10) + " centimeters from you, to your " + closest_position;
+     message += person + " is " + messageDistance(closest) + " from you, to your " + closest_position;
      
      textSize(20);
      fill(255, 255, 255);
@@ -49,14 +58,13 @@ void text_to_speech(Data data) {
    int final_destination_d = data.final_destination.distance;
    
     if (destination_counter % DESTINATION_FREQUENCY == 2) {
-      if (final_destination_d < 700) {
-        message = "You go to your destination";
-        return;
+      if ((final_destination_d/10 == 204 || final_destination_d < 700) && overall_counter > 20) {
+        message = "You've reached your destination";
       }
-      if (final_destination_pos < 100 && final_destination_pos > -100)
-        message = "The destination is " + str(final_destination_d/10) + " centimeters in front of you. Go straight";   
-      else if(final_destination_pos < 0)  message = "The destination is in " + str(final_destination_d/10) + " centimeters. Go to your left. ";
-      else  message = "The destination is " + str(final_destination_d/10) + " centimeters. Go to your right.";
+      else if (final_destination_pos < 100 && final_destination_pos > -100)
+        message = "The destination is " + messageDistance(final_destination_d) + " from you. go straight";   
+      else if(final_destination_pos < 0)  message = "The destination is " + messageDistance(final_destination_d) + " from you. go to your left. ";
+      else  message = "The destination is " + messageDistance(final_destination_d) + " from you. go to your right.";
        thread("speak");
      }
      destination_counter ++;
@@ -82,9 +90,9 @@ void text_to_speech(Data data) {
          String faces_qs = faces_pos_size > 0 ? "&faces=" + server_message_faces : "";
          GetRequest get = new GetRequest("http://192.168.1.83:5000/kinect?final_destination=" + server_message_final + faces_qs);
          get.send();
-         println("Reponse Content: " + get.getContent());
      }  
      server_count ++;
+     overall_counter++;
 }
 
 void speak() {
