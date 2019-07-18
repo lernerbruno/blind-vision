@@ -1,3 +1,6 @@
+color track_color = color(0, 0, 255);
+int threshold = 25;
+
 Final detect_color(PImage img, color track_color, int[] depth) {
   float avgX = 0;
   float avgY = 0;

@@ -31,7 +31,7 @@ void text_to_speech(Data data) {
      textSize(20);
      fill(255, 255, 255);
      text(message, 100, 100, 270, 280);
-      //<>// //<>//
+ //<>// //<>//
      if (audio_counter % FREQUENCY == 2) {
        thread("speak");
      }

@@ -25,8 +25,6 @@ Rectangle[] faces;
 Kinect kinect;
 PImage img;
 ArrayList<Face> detected_faces;
-int threshold = 25;
-color track_color = color(0, 0, 0);
 
 void settings() {
   size(640, 480);
