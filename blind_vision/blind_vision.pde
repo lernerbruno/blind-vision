@@ -107,10 +107,13 @@ void draw() {
   detect_color(img, track_color);
   beep_distance(depth);
   Data data = new Data(detected_faces);
-  //text_to_speech(data);
-  
-  
-  
+  if(detected_faces.size()>0){
+    for(int i=0; i < detected_faces.size(); i++){
+      if(detected_faces.get(i).distance > 500){
+        text_to_speech(data);
+      }
+    }
+  }
   line(kinect.width/2, kinect.height, kinect.width/2, 0);
 }
 
