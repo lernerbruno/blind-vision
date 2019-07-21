@@ -1,4 +1,4 @@
-import gab.opencv.*;
+gimport gab.opencv.*;
 import java.awt.Rectangle;
 import org.openkinect.freenect.*;
 import org.openkinect.freenect2.*;
@@ -19,13 +19,14 @@ float releaseTime = 0.2;
 float duration = 200;
 int distance_note = 60;
 float trigger = 0; 
-String previous_message = "";
 
 OpenCV opencv;
 Rectangle[] faces;
 Kinect kinect;
 PImage img;
 ArrayList<Face> detected_faces;
+int threshold = 25;
+color track_color = color(0, 0, 0);
 
 void settings() {
   size(640, 480);
@@ -37,12 +38,11 @@ void setup() {
   kinect.initDepth();
   kinect.initVideo();
   img = createImage(kinect.width, kinect.height, RGB);
-
+    
   // Create triangle wave and envelope 
   triOsc = new TriOsc(this);
   env  = new Env(this);
   
-  // Text to speech
   tts = new TTS();
 }
 
@@ -60,12 +60,15 @@ void draw() {
   image(img, 0, 0);
 
   detected_faces = deal_with_faces(faces, depth);
-  beep_distance(depth);
-  Final final_destination = detect_color(img, track_color, depth);
-  
-  
-  Data data = new Data(detected_faces, final_destination);
+  detect_color(img, track_color);
+  //beep_distance(depth);
+  Data data = new Data(detected_faces);
   text_to_speech(data);
   
   line(kinect.width/2, kinect.height, kinect.width/2, 0);
+}
+
+// This function calculates the respective frequency of a MIDI note
+float midiToFreq(int note) {
+  return (pow(2, ((note-69)/12.0)))*440;
 }
