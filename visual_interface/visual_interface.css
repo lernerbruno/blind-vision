@@ -1,0 +1,92 @@
+body{
+    margin: 0px;
+    font-size: 1.5em;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    letter-spacing: 0.2em;
+    overflow: hidden;
+}
+
+.container{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+}
+
+.image-container{
+    height: 70%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image{
+    height: 96%;
+    width: 100%;
+    border: 5px solid;
+    position: relative;
+    overflow: hidden;
+}
+
+.options-container{
+    height: 30%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.buttons{
+    height: 90%;
+    width:  49.3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid;
+}
+
+.line{
+    position: absolute;
+    border: 5px solid;
+    top: 0.7%;
+    left: 49.7%;
+    height: 68%;
+    width: 5px;
+    box-sizing: border-box;
+    opacity: 0.5
+}
+
+.change-contrast{
+    opacity: 0.6;
+}
+
+.first{
+    background:white;
+    color:black;
+    border-color: black;
+}
+.second{
+    background: black;
+    color:white;
+    border-color: white;
+}
+.third{
+    background: rgb(5, 5, 100);
+    color:lime;
+    border-color: lime;
+}
+
+.destination{
+    position: absolute;
+    font-size: 5em;
+    font-weight: bold;
+}
+.face{
+    position: absolute;
+    font-size: 5em;
+    font-weight: bold;
+}
